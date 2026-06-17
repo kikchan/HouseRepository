@@ -1,0 +1,40 @@
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import authRouter from './routes/auth.js';
+import housesRouter from './routes/houses.js';
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const port = process.env.PORT || 4000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'dev-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 },
+  })
+);
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/auth', authRouter);
+app.use('/houses', housesRouter);
+
+app.get('/', (req, res) => {
+  res.send({ status: 'House Inventory API' });
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on http://localhost:${port}`);
+});
