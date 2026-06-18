@@ -1,10 +1,8 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import dotenv from 'dotenv';
 import { countUsers, createUser, findUserByUsername, getAllUsers } from '../data/store.js';
 import { requireAuth, requireAdmin } from '../middleware/auth.js';
 
-dotenv.config();
 const router = express.Router();
 
 function sanitizeUser(user) {

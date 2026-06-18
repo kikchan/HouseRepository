@@ -59,7 +59,6 @@ The app will use the `MYSQL_*` values from `.env`.
 - `npm run dev:server` - starts Express server only
 - `npm run dev:client` - starts Vite client only
 - `npm run build` - builds the frontend
-- `npm run seed` - seeds with sample data (optional)
 
 ## Storage
 

@@ -1,13 +1,11 @@
+import './config/env.js';
 import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import authRouter from './routes/auth.js';
 import housesRouter from './routes/houses.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

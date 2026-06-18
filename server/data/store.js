@@ -1,4 +1,5 @@
 
+import '../config/env.js';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
 
@@ -71,8 +72,6 @@ export async function createUser(username,password,isAdmin=false) {
   await pool.query('INSERT INTO users(id,username,password,isAdmin) VALUES (?,?,?,?)',[id,username,hash,isAdmin]);
   return {id,username,password:hash,isAdmin};
 }
-export const createDefaultUser=createUser;
-
 export async function getAllHouses(){ const [r]=await pool.query('SELECT * FROM houses'); return r; }
 export async function filterHouses(){ return getAllHouses(); }
 export async function getHouseById(id){ const [r]=await pool.query('SELECT * FROM houses WHERE id=?',[id]); return r[0]||null; }

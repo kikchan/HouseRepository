@@ -82,23 +82,24 @@ export default function HouseDetailPage() {
                 {house.visited ? 'Visited' : 'Not visited'}
               </span>
             </div>
-            <div className="mb-4 grid gap-3 sm:grid-cols-2 text-sm text-slate-500">
-              <div>Added: {new Date(house.added||house.createdAt).toLocaleString()}</div>
-              <div>Modified: {new Date(house.modified||house.updatedAt).toLocaleString()} | Visited Date: {house.visitedDate?new Date(house.visitedDate).toLocaleString():'N/A'}</div>
+            <div className="mb-4 grid gap-3 sm:grid-cols-1 text-sm text-slate-500">
+              <div>Added: {new Date(house.added||house.added).toLocaleString("es-ES", { hour12: false })}</div>
+              <div>Modified: {new Date(house.modified||house.updatedAt).toLocaleString("es-ES", { hour12: false })}</div>
+              <div>Visited Date: {house.visitedDate? new Date(house.visitedDate).toLocaleString("es-ES", { hour12: false }):'N/A'}</div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <p className="text-sm text-slate-500">Price</p>
-                <p className="mt-1 text-xl font-semibold">€{house.price}</p>
+                <p className="mt-1 text-xl font-semibold">{house.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
               </div>
               <div>
                 <p className="text-sm text-slate-500">Community fee</p>
-                <p className="mt-1 text-lg">€{house.communityFee} / month</p>
+                <p className="mt-1 text-lg">{house.communityFee.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })} / month</p>
               </div>
               <div>
                 <p className="text-sm text-slate-500">IBI price</p>
-                <p className="mt-1 text-lg">€{house.ibiPrice}</p>
+                <p className="mt-1 text-lg">{house.ibiPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
               </div>
               <div>
                 <p className="text-sm text-slate-500">Link</p>
