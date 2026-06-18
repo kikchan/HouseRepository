@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage.jsx';
 import HouseDetailPage from './pages/HouseDetailPage.jsx';
 import HouseFormPage from './pages/HouseFormPage.jsx';
+import UsersPage from './pages/UsersPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SetupPage from './pages/SetupPage.jsx';
 import { fetchJson } from './api.js';
@@ -92,6 +93,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/users" element={<ProtectedRoute user={user}><UsersPage user={user} /></ProtectedRoute>} />
         <Route
           path="/houses/new"
           element={

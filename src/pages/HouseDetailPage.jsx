@@ -83,8 +83,8 @@ export default function HouseDetailPage() {
               </span>
             </div>
             <div className="mb-4 grid gap-3 sm:grid-cols-2 text-sm text-slate-500">
-              <div>Added: {house.createdAt ? new Date(house.createdAt).toLocaleString() : 'Unknown'}</div>
-              <div>Modified: {house.updatedAt ? new Date(house.updatedAt).toLocaleString() : 'Unknown'}</div>
+              <div>Added: {new Date(house.added||house.createdAt).toLocaleString()}</div>
+              <div>Modified: {new Date(house.modified||house.updatedAt).toLocaleString()} | Visited Date: {house.visitedDate?new Date(house.visitedDate).toLocaleString():'N/A'}</div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

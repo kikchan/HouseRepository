@@ -16,6 +16,8 @@ export default function HouseFormPage({ editMode }) {
     bathrooms: '',
     ibiPrice: '',
     communityFee: '',
+    size:'',
+    visitedDate:'',
     visited: false,
     description: '',
     pros: '',
@@ -54,6 +56,8 @@ export default function HouseFormPage({ editMode }) {
         cons: house.cons || '',
         agentName: house.agentName || '',
         agentPhone: house.agentPhone || '',
+        size: house.size || '',
+        visitedDate: house.visitedDate ? house.visitedDate.substring(0,16):'',
       });
     } catch (err) {
       setError(err.message);
@@ -170,7 +174,7 @@ export default function HouseFormPage({ editMode }) {
                 placeholder="https://example.com"
               />
             </label>
-          </div>
+          </div><label className='block'><span>Size (m²)</span><input type='number' value={formValues.size} onChange={(e)=>handleChange('size',e.target.value)} className='mt-2 w-full rounded-xl border-gray-300 px-4 py-3'/></label><label className='block'><span>Visited Date</span><input type='datetime-local' value={formValues.visitedDate} onChange={(e)=>handleChange('visitedDate',e.target.value)} className='mt-2 w-full rounded-xl border-gray-300 px-4 py-3'/></label>
 
           <div className="grid gap-4 md:grid-cols-3">
             <label className="block">

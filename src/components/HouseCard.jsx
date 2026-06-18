@@ -29,11 +29,7 @@ export default function HouseCard({ house, onDelete }) {
           </div>
           <div className="flex flex-wrap gap-2 justify-end">
             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs uppercase tracking-wide text-slate-600">{house.type}</span>
-            <span className={`rounded-full px-3 py-1 text-xs text-white uppercase tracking-wide ${
-              house.visited ? 'bg-emerald-500' : 'bg-amber-500'
-            }`}>
-              {house.visited ? 'Visited' : 'Not visited'}
-            </span>
+            <span className="rounded-full px-3 py-1 text-xs text-white uppercase tracking-wide bg-amber-500">{house.price / house.size} €/m²</span>
           </div>
         </div>
         <div className="mb-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-3">
@@ -42,7 +38,7 @@ export default function HouseCard({ house, onDelete }) {
           <span>IBI €{house.ibiPrice}</span>
         </div>
         <div className="mb-4 text-xs text-slate-500">
-          Added: {house.createdAt ? new Date(house.createdAt).toLocaleDateString() : 'Unknown'} · Modified: {house.updatedAt ? new Date(house.updatedAt).toLocaleDateString() : 'Unknown'}
+          Added: {house.createdAt ? new Date(house.createdAt).toLocaleDateString() : 'Unknown'} · Modified: {new Date(house.modified||house.updatedAt).toLocaleDateString()}
         </div>
         <div className="flex flex-wrap gap-3">
           <Link

@@ -170,3 +170,9 @@ model User {
 - Sorting by price
 - Grid/list toggle
 - Visited statistics
+
+
+## June 2026 Changes
+- Added house size field.
+- Added separate Users page and navigation menu.
+- Added added, modified and visitedDate datetime fields.

@@ -72,3 +72,9 @@ Data is stored in MySQL. Uploaded images are stored in `uploads/houses/`.
 - No migration is required for an empty database.
 - The first admin user is created through the setup page.
 
+
+
+## June 2026 Changes
+- Added house size field.
+- Added separate Users page and navigation menu.
+- Added added, modified and visitedDate datetime fields.

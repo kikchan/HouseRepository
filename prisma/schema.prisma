@@ -21,6 +21,10 @@ model House {
   communityFee Float
   visited      Boolean  @default(false)
   description  String?
+  size Float @default(0)
+  visitedDate DateTime?
+  added DateTime @default(now())
+  modified DateTime @updatedAt
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

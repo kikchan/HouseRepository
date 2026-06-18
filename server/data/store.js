@@ -39,7 +39,11 @@ async function init() {
       pros TEXT NULL,
       cons TEXT NULL,
       agentName TEXT NULL,
-      agentPhone TEXT NULL
+      agentPhone TEXT NULL,
+      size DOUBLE DEFAULT 0,
+      added DATETIME DEFAULT CURRENT_TIMESTAMP,
+      modified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      visitedDate DATETIME NULL
     )
   `);
 }
@@ -112,14 +116,16 @@ export async function createHouse(h) {
       h.pros,
       h.cons,
       h.agentName,
-      h.agentPhone
+      h.agentPhone,
+      h.size || 0,
+      h.visitedDate || null
     ]
   );
 
   return {
     id,
     ...h,
-    visited: false
+    visited: false, size:h.size||0, added:new Date(), modified:new Date(), visitedDate:h.visitedDate||null
   };
 }
 
@@ -162,7 +168,10 @@ export async function updateHouse(id, changes) {
       pros=?,
       cons=?,
       agentName=?,
-      agentPhone=?
+      agentPhone=?,
+      size=?,
+      visitedDate=?,
+      modified=CURRENT_TIMESTAMP
      WHERE id=?`,
     [
       h.title,
@@ -181,6 +190,8 @@ export async function updateHouse(id, changes) {
       h.cons,
       h.agentName,
       h.agentPhone,
+      h.size || 0,
+      h.visitedDate || null,
       id
     ]
   );
