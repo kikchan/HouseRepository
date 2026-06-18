@@ -4,4 +4,3 @@ dist
 uploads
 .DS_Store
 .vscode
-server/data
