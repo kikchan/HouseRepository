@@ -187,48 +187,4 @@ export async function updateHouse(id, changes) {
 
   return getHouseById(id);
 }
-export async function updateHouse(id, changes){
-  const current = await getHouseById(id);
-  if(!current) return null;
-
-  const h = {
-    ...current,
-    ...Object.fromEntries(
-      Object.entries(changes).filter(
-        ([k,v]) => v !== undefined && v !== null && v !== ''
-      )
-    )
-  };
-
-  const visited =
-    h.visited === true ||
-    h.visited === 1 ||
-    h.visited === '1' ||
-    h.visited === 'true';
-
-  await pool.query(
-    'UPDATE houses SET title=?,link=?,imagePath=?,location=?,type=?,price=?,rooms=?,bathrooms=?,ibiPrice=?,communityFee=?,visited=?,description=?,pros=?,cons=?,agentName=?,agentPhone=? WHERE id=?',
-    [
-      h.title,
-      h.link,
-      h.imagePath,
-      h.location,
-      h.type,
-      h.price,
-      h.rooms,
-      h.bathrooms,
-      h.ibiPrice,
-      h.communityFee,
-      visited ? 1 : 0,
-      h.description,
-      h.pros,
-      h.cons,
-      h.agentName,
-      h.agentPhone,
-      id
-    ]
-  );
-
-  return getHouseById(id);
-}
 export async function deleteHouse(id){ const old=await getHouseById(id); await pool.query('DELETE FROM houses WHERE id=?',[id]); return old; }
