@@ -5,7 +5,7 @@ import HouseCard from '../components/HouseCard.jsx';
 
 const TYPE_OPTIONS = ['apartment', 'house', 'villa'];
 
-export default function DashboardPage({ user, onLogout }) {
+export default function DashboardPage() {
   const [houses, setHouses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -57,16 +57,6 @@ export default function DashboardPage({ user, onLogout }) {
         <div>
           <h1 className="text-2xl font-semibold">House Inventory</h1>
           <p className="text-sm text-slate-500">Manage listings with full create, read, update, delete support.</p>
-        </div>
-        <div className="mt-4 flex flex-col gap-2 sm:mt-0 sm:flex-row sm:items-center">
-          <span className="rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-700">{user?.username}</span>
-          <button
-            type="button"
-            onClick={onLogout}
-            className="rounded-2xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-400"
-          >
-            Logout
-          </button>
         </div>
       </header>
 

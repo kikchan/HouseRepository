@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteHouse, getHouse, toggleVisited } from '../api.js';
 
-export default function HouseDetailPage({ onLogout }) {
+export default function HouseDetailPage() {
   const { id } = useParams();
   const [house, setHouse] = useState(null);
   const [error, setError] = useState('');
@@ -49,12 +49,6 @@ export default function HouseDetailPage({ onLogout }) {
             <p className="text-sm text-slate-500">{house.location}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button
-              onClick={onLogout}
-              className="rounded-2xl bg-rose-500 px-4 py-2 text-sm text-white hover:bg-rose-400"
-            >
-              Logout
-            </button>
             <Link
               to={`/houses/${id}/edit`}
               className="rounded-2xl bg-slate-900 px-4 py-2 text-sm text-white hover:bg-slate-700"
@@ -115,6 +109,15 @@ export default function HouseDetailPage({ onLogout }) {
                 <h2 className="text-lg font-semibold">Description</h2>
                 <p className="mt-2 text-slate-600">{house.description || 'No description available.'}</p>
               </div>
+              {(house.agentName || house.agentPhone) && (
+                <div>
+                  <h2 className="text-lg font-semibold">Agent Information</h2>
+                  <div className="mt-2 space-y-1 text-slate-600">
+                    {house.agentName && <p><strong>Name:</strong> {house.agentName}</p>}
+                    {house.agentPhone && <p><strong>Phone:</strong> {house.agentPhone}</p>}
+                  </div>
+                </div>
+              )}
               <div>
                 <button
                   onClick={handleToggleVisited}

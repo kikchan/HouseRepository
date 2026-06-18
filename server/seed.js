@@ -1,19 +1,18 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { createDefaultUser, getAllHouses, createHouse } from './data/store.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const prisma = new PrismaClient();
 
 async function main() {
   const defaultUsername = process.env.DEFAULT_USER || 'admin';
   const defaultPassword = process.env.DEFAULT_PASSWORD || 'password123';
 
-  const existingUser = await prisma.user.findUnique({ where: { username: defaultUsername } });
-  if (!existingUser) {
-    const hashed = await bcrypt.hash(defaultPassword, 10);
-    await prisma.user.create({ data: { username: defaultUsername, password: hashed } });
-    console.log(`Created default user: ${defaultUsername}`);
+  await createDefaultUser(defaultUsername, defaultPassword);
+
+  const existingHouses = getAllHouses();
+  if (existingHouses.length > 0) {
+    console.log('Houses already exist. Skipping seed.');
+    return;
   }
 
   const houses = [
@@ -62,20 +61,14 @@ async function main() {
   ];
 
   for (const house of houses) {
-    const existing = await prisma.house.findFirst({ where: { title: house.title } });
-    if (!existing) {
-      await prisma.house.create({ data: house });
-    }
+    createHouse(house);
   }
 
   console.log('Seed complete.');
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
+

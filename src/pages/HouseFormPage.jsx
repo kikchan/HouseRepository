@@ -18,6 +18,8 @@ export default function HouseFormPage({ editMode }) {
     communityFee: '',
     visited: false,
     description: '',
+    agentName: '',
+    agentPhone: '',
   });
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState('');
@@ -46,6 +48,8 @@ export default function HouseFormPage({ editMode }) {
         communityFee: house.communityFee || '',
         visited: house.visited || false,
         description: house.description || '',
+        agentName: house.agentName || '',
+        agentPhone: house.agentPhone || '',
       });
     } catch (err) {
       setError(err.message);
@@ -56,6 +60,24 @@ export default function HouseFormPage({ editMode }) {
 
   const handleChange = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handlePasteImage = async () => {
+    try {
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        if (item.types.includes('image/png') || item.types.includes('image/jpeg') || item.types.includes('image/webp')) {
+          const blob = await item.getType(item.types.find(t => t.startsWith('image/')));
+          const file = new File([blob], `pasted-${Date.now()}.${blob.type.split('/')[1]}`, { type: blob.type });
+          setImageFile(file);
+          setError('');
+          return;
+        }
+      }
+      setError('No image found in clipboard');
+    } catch (err) {
+      setError('Failed to read clipboard. Make sure clipboard access is allowed.');
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -218,14 +240,47 @@ export default function HouseFormPage({ editMode }) {
             />
           </label>
 
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">Agent Name</span>
+              <input
+                value={formValues.agentName}
+                onChange={(e) => handleChange('agentName', e.target.value)}
+                className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3"
+                placeholder="John Doe"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">Agent Phone</span>
+              <input
+                value={formValues.agentPhone}
+                onChange={(e) => handleChange('agentPhone', e.target.value)}
+                className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3"
+                placeholder="+34 123 456 789"
+              />
+            </label>
+          </div>
+
           <label className="block">
             <span className="text-sm font-medium text-slate-700">Image</span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-              className="mt-2 w-full"
-            />
+            <div className="mt-2 space-y-3">
+              <div className="flex gap-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                  className="w-full"
+                />
+                <button
+                  type="button"
+                  onClick={handlePasteImage}
+                  className="rounded-2xl bg-slate-600 px-4 py-3 text-sm text-white hover:bg-slate-500 whitespace-nowrap"
+                >
+                  Paste
+                </button>
+              </div>
+              {imageFile && <p className="text-sm text-slate-600">Selected: {imageFile.name}</p>}
+            </div>
           </label>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

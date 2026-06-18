@@ -16,26 +16,17 @@ export async function fetchJson(url, options = {}) {
   return response.json();
 }
 
-export async function login(username, password) {
-  return fetchJson('/auth/login', {
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify({ username, password }),
-  });
-}
-
 export async function getHouses(query = '') {
-  return fetchJson(`/houses${query}`, { credentials: 'include' });
+  return fetchJson(`/houses${query}`);
 }
 
 export async function getHouse(id) {
-  return fetchJson(`/houses/${id}`, { credentials: 'include' });
+  return fetchJson(`/houses/${id}`);
 }
 
 export async function createHouse(formData) {
   const response = await fetch(`${API_BASE}/houses`, {
     method: 'POST',
-    credentials: 'include',
     body: formData,
   });
   if (!response.ok) {
@@ -48,7 +39,6 @@ export async function createHouse(formData) {
 export async function updateHouse(id, formData) {
   const response = await fetch(`${API_BASE}/houses/${id}`, {
     method: 'PUT',
-    credentials: 'include',
     body: formData,
   });
   if (!response.ok) {
@@ -59,7 +49,7 @@ export async function updateHouse(id, formData) {
 }
 
 export async function deleteHouse(id) {
-  return fetchJson(`/houses/${id}`, { method: 'DELETE', credentials: 'include' });
+  return fetchJson(`/houses/${id}`, { method: 'DELETE' });
 }
 
 export async function toggleVisited(id, visited) {

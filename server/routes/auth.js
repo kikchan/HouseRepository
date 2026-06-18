@@ -1,10 +1,9 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+import { createDefaultUser, findUserByUsername } from '../data/store.js';
 
 dotenv.config();
-const prisma = new PrismaClient();
 const router = express.Router();
 
 const DEFAULT_USER = {
@@ -12,15 +11,7 @@ const DEFAULT_USER = {
   password: process.env.DEFAULT_PASSWORD || 'password123',
 };
 
-async function ensureDefaultUser() {
-  const existing = await prisma.user.findUnique({ where: { username: DEFAULT_USER.username } });
-  if (!existing) {
-    const hashed = await bcrypt.hash(DEFAULT_USER.password, 10);
-    await prisma.user.create({ data: { username: DEFAULT_USER.username, password: hashed } });
-    console.log(`Default user created: ${DEFAULT_USER.username}`);
-  }
-}
-ensureDefaultUser().catch((error) => {
+createDefaultUser(DEFAULT_USER.username, DEFAULT_USER.password).catch((error) => {
   console.error('Failed to ensure default user:', error);
 });
 
@@ -30,7 +21,7 @@ router.post('/login', async (req, res) => {
     return res.status(400).json({ error: 'Username and password are required' });
   }
 
-  const user = await prisma.user.findUnique({ where: { username } });
+  const user = await findUserByUsername(username);
   if (!user) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }

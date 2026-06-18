@@ -15,9 +15,11 @@ export default function HouseCard({ house, onDelete }) {
         <div className="absolute left-4 top-4 rounded-full bg-slate-900 px-3 py-1 text-sm text-white">
           €{house.price}
         </div>
-        {house.visited && (
-          <div className="absolute right-4 top-4 rounded-full bg-emerald-500 px-3 py-1 text-sm text-white">Visited</div>
-        )}
+        <div className={`absolute right-4 top-4 rounded-full px-3 py-1 text-sm text-white ${
+          house.visited ? 'bg-emerald-500' : 'bg-amber-500'
+        }`}>
+          {house.visited ? 'Visited' : 'Not visited'}
+        </div>
       </div>
       <div className="p-5">
         <div className="mb-3 flex items-center justify-between gap-2">
@@ -25,7 +27,14 @@ export default function HouseCard({ house, onDelete }) {
             <h2 className="text-xl font-semibold">{house.title}</h2>
             <p className="text-sm text-slate-500">{house.location}</p>
           </div>
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs uppercase tracking-wide text-slate-600">{house.type}</span>
+          <div className="flex flex-wrap gap-2 justify-end">
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs uppercase tracking-wide text-slate-600">{house.type}</span>
+            <span className={`rounded-full px-3 py-1 text-xs text-white uppercase tracking-wide ${
+              house.visited ? 'bg-emerald-500' : 'bg-amber-500'
+            }`}>
+              {house.visited ? 'Visited' : 'Not visited'}
+            </span>
+          </div>
         </div>
         <div className="mb-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-3">
           <span>{house.rooms} rooms</span>
