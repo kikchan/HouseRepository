@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { requireAuth } from '../middleware/auth.js';
 import { getAllHouses, getHouseById, createHouse, updateHouse, deleteHouse, filterHouses } from '../data/store.js';
+import { fetchImageFromUrl } from '../utils/imageFetcher.js';
 
 const router = express.Router();
 
@@ -52,12 +53,20 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', upload.single('image'), async (req, res) => {
-  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, pros, cons, agentName, agentPhone, size, visitedDate } = req.body;
+  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, pros, cons, agentName, agentPhone, size, visitedDate, fetchListingImage } = req.body;
   if (!title || !location || !type || !price || !rooms || !bathrooms) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const imagePath = req.file ? `/uploads/houses/${req.file.filename}` : null;
+  let imagePath = req.file ? `/uploads/houses/${req.file.filename}` : null;
+  if (!imagePath && link && fetchListingImage === 'true') {
+    try {
+      imagePath = await fetchImageFromUrl(link);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
   const house = await createHouse({
     title,
     link: link || null,
@@ -86,8 +95,15 @@ router.put('/:id', upload.single('image'), async (req, res) => {
   const existing = await getHouseById(req.params.id);
   if (!existing) return res.status(404).json({ error: 'House not found' });
 
-  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, pros, cons, agentName, agentPhone, size, visitedDate } = req.body;
-  const imagePath = req.file ? `/uploads/houses/${req.file.filename}` : existing.imagePath;
+  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, pros, cons, agentName, agentPhone, size, visitedDate, fetchListingImage } = req.body;
+  let imagePath = req.file ? `/uploads/houses/${req.file.filename}` : existing.imagePath;
+  if (!req.file && link && fetchListingImage === 'true') {
+    try {
+      imagePath = await fetchImageFromUrl(link);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
 
   const house = await updateHouse(req.params.id, {
     title,

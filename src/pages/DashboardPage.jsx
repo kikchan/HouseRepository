@@ -115,14 +115,14 @@ export default function DashboardPage({ user, onLogout }) {
                 <button
                   type="button"
                   onClick={loadHouses}
-                  className={`${buttonClass} coast-button-primary`}
+                  className={`${buttonClass} coast-button-secondary`}
                 >
                   Apply
                 </button>
                 <button
                   type="button"
                   onClick={() => navigate('/houses/new')}
-                  className={`${buttonClass} coast-button-secondary`}
+                  className={`${buttonClass} coast-button-primary`}
                 >
                   Add house
                 </button>

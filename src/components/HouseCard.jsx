@@ -45,7 +45,7 @@ export default function HouseCard({ house, onDelete }) {
           {house.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
         </div>
         <div className={`absolute right-4 top-4 rounded-full px-3 py-1 text-sm text-white ${
-          house.visited ? 'bg-teal-600' : 'bg-sky-600'
+          house.visited ? 'bg-teal-600' : 'bg-neutral-600'
         }`}>
           {house.visited ? 'Visited' : 'Not visited'}
         </div>

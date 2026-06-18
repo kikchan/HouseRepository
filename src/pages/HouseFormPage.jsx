@@ -24,6 +24,7 @@ export default function HouseFormPage({ editMode }) {
     cons: '',
     agentName: '',
     agentPhone: '',
+    fetchListingImage: false,
   });
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState('');
@@ -58,6 +59,7 @@ export default function HouseFormPage({ editMode }) {
         cons: house.cons || '',
         agentName: house.agentName || '',
         agentPhone: house.agentPhone || '',
+        fetchListingImage: false,
         size: house.size || '',
         visitedDate: house.visitedDate ? house.visitedDate.substring(0,16):'',
       });
@@ -310,6 +312,15 @@ export default function HouseFormPage({ editMode }) {
                   Paste
                 </button>
               </div>
+              <label className="flex items-center gap-2 text-sm text-teal-800">
+                <input
+                  type="checkbox"
+                  checked={formValues.fetchListingImage}
+                  onChange={(e) => handleChange('fetchListingImage', e.target.checked)}
+                  className="rounded border-teal-300 text-teal-700 focus:ring-teal-600"
+                />
+                Fetch image from listing link when no image is uploaded
+              </label>
               {imageFile && <p className="text-sm text-teal-700">Selected: {imageFile.name}</p>}
             </div>
           </label>

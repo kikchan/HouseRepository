@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteHouse, getHouse, toggleVisited } from '../api.js';
 import AppHeader from '../components/AppHeader.jsx';
+import ReactMarkdown from 'react-markdown';
 
 export default function HouseDetailPage({ onLogout }) {
   const { id } = useParams();
@@ -139,15 +140,27 @@ export default function HouseDetailPage({ onLogout }) {
             <div className="mt-6 space-y-4">
               <div>
                 <h2 className="text-lg font-semibold">Description</h2>
-                <p className="mt-2 text-slate-600">{house.description || 'No description available.'}</p>
+                <div className="prose prose-slate max-w-none">
+                <ReactMarkdown>
+                  {house.description || 'No description available.'}
+                </ReactMarkdown>
+              </div>
               </div>
               <div>
                 <h2 className="text-lg font-semibold">Pros</h2>
-                <p className="mt-2 text-slate-600">{house.pros || 'No pros listed.'}</p>
+                <div className="prose prose-slate max-w-none">
+                <ReactMarkdown>
+                  {house.pros || 'No pros listed.'}
+                </ReactMarkdown>
+              </div>
               </div>
               <div>
                 <h2 className="text-lg font-semibold">Cons</h2>
-                <p className="mt-2 text-slate-600">{house.cons || 'No cons listed.'}</p>
+                <div className="prose prose-slate max-w-none">
+                <ReactMarkdown>
+                  {house.cons || 'No cons listed.'}
+                </ReactMarkdown>
+              </div>
               </div>
               {(house.agentName || house.agentPhone) && (
                 <div>
