@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { deleteHouse, getHouses } from '../api.js';
+import AppHeader from '../components/AppHeader.jsx';
 import HouseCard from '../components/HouseCard.jsx';
 
 const TYPE_OPTIONS = ['apartment', 'house', 'villa'];
@@ -36,9 +37,9 @@ export default function DashboardPage({ user, onLogout }) {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this house?')) return;
-    await deleteHouse(id);
+  const handleDelete = async (house) => {
+    if (!window.confirm(`Delete "${house.title}"? This cannot be undone.`)) return;
+    await deleteHouse(house.id);
     loadHouses();
   };
 
@@ -54,14 +55,13 @@ export default function DashboardPage({ user, onLogout }) {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white px-4 py-4 shadow-sm sm:flex sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">House Inventory</h1><div><a href='/'>Houses</a> | <a href='/users'>Users</a></div>
-          <p className="text-sm text-slate-500">Manage listings with full create, read, update, delete support.</p>
-        </div>
-      </header>
+      <AppHeader
+        title="House Inventory"
+        subtitle="Manage listings with full create, read, update, delete support."
+        onLogout={onLogout}
+      />
 
-      <main className="px-4 py-6">
+      <main className="mx-auto max-w-6xl px-4 py-6">
         <section className="mb-6 flex flex-col gap-4 rounded-3xl bg-white p-6 shadow-sm sm:flex-row sm:items-end sm:justify-between">
           <div className="grid gap-4 sm:grid-cols-3">
             <div>

@@ -93,7 +93,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/users" element={<ProtectedRoute user={user}><UsersPage user={user} /></ProtectedRoute>} />
+        <Route path="/users" element={<ProtectedRoute user={user}><UsersPage user={user} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route
           path="/houses/new"
           element={

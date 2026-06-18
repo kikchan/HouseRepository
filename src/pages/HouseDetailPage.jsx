@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteHouse, getHouse, toggleVisited } from '../api.js';
+import AppHeader from '../components/AppHeader.jsx';
 
-export default function HouseDetailPage() {
+export default function HouseDetailPage({ onLogout }) {
   const { id } = useParams();
   const [house, setHouse] = useState(null);
   const [error, setError] = useState('');
@@ -22,7 +23,7 @@ export default function HouseDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Delete this house?')) return;
+    if (!window.confirm(`Delete "${house.title}"? This cannot be undone.`)) return;
     await deleteHouse(id);
     navigate('/');
   };
@@ -33,16 +34,43 @@ export default function HouseDetailPage() {
   };
 
   if (error) {
-    return <div className="p-8 text-red-700">{error}</div>;
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <AppHeader title="House Inventory" subtitle="Unable to load house details." onLogout={onLogout} />
+        <main className="mx-auto max-w-6xl px-4 py-6">
+          <div className="rounded-2xl bg-rose-100 p-4 text-rose-700">{error}</div>
+        </main>
+      </div>
+    );
   }
 
   if (!house) {
-    return <div className="p-8">Loading house...</div>;
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <AppHeader title="House Inventory" subtitle="Loading house details..." onLogout={onLogout} />
+        <main className="mx-auto max-w-6xl px-4 py-6">
+          <div className="rounded-3xl bg-white p-12 text-center shadow-sm">Loading house...</div>
+        </main>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6">
-      <div className="mx-auto max-w-5xl">
+    <div className="min-h-screen bg-slate-50">
+      <AppHeader
+        title="House Inventory"
+        subtitle="View listing details, notes, and visit status."
+        onLogout={onLogout}
+      />
+      <main className="mx-auto max-w-6xl px-4 py-6">
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          aria-label="Back to houses"
+          className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-xl leading-none text-slate-700 shadow-sm hover:bg-slate-100"
+        >
+          &larr;
+        </button>
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-semibold">{house.title}</h1>
@@ -142,7 +170,7 @@ export default function HouseDetailPage() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
