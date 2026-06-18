@@ -15,7 +15,6 @@ COPY package-lock.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/server ./server
-COPY --from=build /app/uploads ./uploads
 COPY --from=build /app/public ./public
 
 ENV NODE_ENV=production
