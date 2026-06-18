@@ -51,10 +51,9 @@ export default function UsersPage({ user, onLogout }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="coast-page">
       <AppHeader
         title="Users"
-        subtitle="Manage the accounts that can access the inventory."
         onLogout={onLogout}
       />
 
@@ -66,7 +65,7 @@ export default function UsersPage({ user, onLogout }) {
         )}
 
         {user?.isAdmin && (
-          <section className="mb-6 rounded-3xl bg-white p-6 shadow-sm">
+          <section className="coast-panel mb-6 p-6">
             <div className="mb-5">
               <h2 className="text-lg font-semibold">Create User</h2>
               <p className="text-sm text-slate-500">New users are created as non-admin accounts.</p>
@@ -78,7 +77,7 @@ export default function UsersPage({ user, onLogout }) {
                 <input
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
-                  className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3 shadow-sm"
+                  className="coast-field mt-2 w-full rounded-xl px-4 py-3"
                   placeholder="Username"
                   required
                 />
@@ -89,7 +88,7 @@ export default function UsersPage({ user, onLogout }) {
                   type="password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3 shadow-sm"
+                  className="coast-field mt-2 w-full rounded-xl px-4 py-3"
                   placeholder="Password"
                   required
                 />
@@ -97,7 +96,7 @@ export default function UsersPage({ user, onLogout }) {
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-2xl bg-slate-900 px-5 py-3 text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="coast-button-primary rounded-2xl px-5 py-3 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? 'Creating...' : 'Create'}
               </button>
@@ -105,8 +104,8 @@ export default function UsersPage({ user, onLogout }) {
           </section>
         )}
 
-        <section className="overflow-hidden rounded-3xl bg-white shadow-sm">
-          <div className="border-b border-slate-200 p-6">
+        <section className="coast-panel overflow-hidden">
+          <div className="border-b border-teal-100 p-6">
             <h2 className="text-lg font-semibold">Current Users</h2>
             <p className="text-sm text-slate-500">{sortedUsers.length} accounts found</p>
           </div>
@@ -116,11 +115,11 @@ export default function UsersPage({ user, onLogout }) {
           ) : sortedUsers.length === 0 ? (
             <div className="p-10 text-center text-slate-500">No users found.</div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-teal-100">
               {sortedUsers.map((account) => (
                 <div key={account.id} className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-sm font-semibold uppercase text-slate-700">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-50 text-sm font-semibold uppercase text-teal-800">
                       {account.username.slice(0, 2)}
                     </div>
                     <div>
@@ -135,7 +134,7 @@ export default function UsersPage({ user, onLogout }) {
                       </span>
                     )}
                     {account.id === user?.id && (
-                      <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white">
+                      <span className="rounded-full bg-teal-700 px-3 py-1 text-xs font-medium text-white">
                         You
                       </span>
                     )}

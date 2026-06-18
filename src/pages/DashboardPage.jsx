@@ -15,7 +15,7 @@ export default function DashboardPage({ user, onLogout }) {
   const [search, setSearch] = useState('');
   const [priceSort, setPriceSort] = useState('none');
   const navigate = useNavigate();
-  const fieldClass = 'mt-2 h-11 w-full rounded-xl border-gray-300 px-3 text-sm shadow-sm';
+  const fieldClass = 'coast-field mt-2 h-11 w-full rounded-xl px-3 text-sm';
   const buttonClass = 'h-11 rounded-xl px-4 text-sm font-medium transition';
 
   useEffect(() => {
@@ -55,14 +55,14 @@ export default function DashboardPage({ user, onLogout }) {
   }, [houses, priceSort]);
 
   return (
-    <div className="min-h-screen">
+    <div className="coast-page">
       <AppHeader
         title="House Inventory"
         onLogout={onLogout}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-6">
-        <section className="mb-6 rounded-3xl bg-white p-6 shadow-sm">
+        <section className="coast-panel mb-6 p-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_minmax(18rem,1.4fr)] lg:items-end">
             <div className="min-w-0">
               <label className="block text-sm font-medium text-slate-700">Visited</label>
@@ -110,19 +110,19 @@ export default function DashboardPage({ user, onLogout }) {
                   placeholder="Title or location"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-11 min-w-0 rounded-xl border-gray-300 px-3 text-sm shadow-sm"
+                  className="coast-field h-11 min-w-0 rounded-xl px-3 text-sm"
                 />
                 <button
                   type="button"
                   onClick={loadHouses}
-                  className={`${buttonClass} bg-slate-900 text-white hover:bg-slate-700`}
+                  className={`${buttonClass} coast-button-primary`}
                 >
                   Apply
                 </button>
                 <button
                   type="button"
                   onClick={() => navigate('/houses/new')}
-                  className={`${buttonClass} border border-slate-200 bg-white text-slate-900 hover:bg-slate-100`}
+                  className={`${buttonClass} coast-button-secondary`}
                 >
                   Add house
                 </button>
@@ -135,15 +135,15 @@ export default function DashboardPage({ user, onLogout }) {
 
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-xl font-semibold">Listings</h2>
-            <p className="text-sm text-slate-500">{filteredHouses.length} houses found</p>
+            <h2 className="text-xl font-semibold text-teal-950">Listings</h2>
+            <p className="text-sm text-teal-700">{filteredHouses.length} houses found</p>
           </div>
         </div>
 
         {error && <div className="rounded-2xl bg-rose-100 p-4 text-rose-700">{error}</div>}
 
         {loading ? (
-          <div className="rounded-3xl bg-white p-12 text-center shadow-sm">Loading houses...</div>
+          <div className="coast-panel p-12 text-center text-teal-800">Loading houses...</div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {filteredHouses.map((house) => (

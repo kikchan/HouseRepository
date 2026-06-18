@@ -35,7 +35,7 @@ export default function HouseDetailPage({ onLogout }) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="coast-page">
         <AppHeader title="House Inventory" subtitle="Unable to load house details." onLogout={onLogout} />
         <main className="mx-auto max-w-6xl px-4 py-6">
           <div className="rounded-2xl bg-rose-100 p-4 text-rose-700">{error}</div>
@@ -46,20 +46,19 @@ export default function HouseDetailPage({ onLogout }) {
 
   if (!house) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="coast-page">
         <AppHeader title="House Inventory" subtitle="Loading house details..." onLogout={onLogout} />
         <main className="mx-auto max-w-6xl px-4 py-6">
-          <div className="rounded-3xl bg-white p-12 text-center shadow-sm">Loading house...</div>
+          <div className="coast-panel p-12 text-center text-teal-800">Loading house...</div>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="coast-page">
       <AppHeader
         title="House Inventory"
-        subtitle="View listing details, notes, and visit status."
         onLogout={onLogout}
       />
       <main className="mx-auto max-w-6xl px-4 py-6">
@@ -67,7 +66,7 @@ export default function HouseDetailPage({ onLogout }) {
           type="button"
           onClick={() => navigate('/')}
           aria-label="Back to houses"
-          className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-xl leading-none text-slate-700 shadow-sm hover:bg-slate-100"
+          className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-teal-200 bg-white/90 text-xl leading-none text-teal-900 shadow-sm hover:bg-teal-50"
         >
           &larr;
         </button>
@@ -79,20 +78,20 @@ export default function HouseDetailPage({ onLogout }) {
           <div className="flex flex-wrap gap-3">
             <Link
               to={`/houses/${id}/edit`}
-              className="rounded-2xl bg-slate-900 px-4 py-2 text-sm text-white hover:bg-slate-700"
+              className="rounded-2xl bg-teal-700 px-4 py-2 text-sm text-white hover:bg-teal-600"
             >
               Edit
             </Link>
             <button
               onClick={handleDelete}
-              className="rounded-2xl bg-amber-500 px-4 py-2 text-sm text-slate-900 hover:bg-amber-400"
+              className="rounded-2xl bg-stone-200 px-4 py-2 text-sm text-teal-950 hover:bg-stone-300"
             >
               Delete
             </button>
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+        <div className="coast-panel overflow-hidden">
           <img
             src={house.imagePath}
             alt={house.title}
@@ -103,9 +102,9 @@ export default function HouseDetailPage({ onLogout }) {
           />
           <div className="p-6">
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">{house.type}</span>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">{house.rooms} rooms</span>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">{house.bathrooms} bathrooms</span>
+              <span className="rounded-full bg-cyan-50 px-3 py-1 text-sm text-teal-800">{house.type}</span>
+              <span className="rounded-full bg-cyan-50 px-3 py-1 text-sm text-teal-800">{house.rooms} rooms</span>
+              <span className="rounded-full bg-cyan-50 px-3 py-1 text-sm text-teal-800">{house.bathrooms} bathrooms</span>
               <span className={`rounded-full px-3 py-1 text-sm ${house.visited ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                 {house.visited ? 'Visited' : 'Not visited'}
               </span>
@@ -162,7 +161,7 @@ export default function HouseDetailPage({ onLogout }) {
               <div>
                 <button
                   onClick={handleToggleVisited}
-                  className="rounded-2xl bg-slate-900 px-5 py-3 text-white hover:bg-slate-700"
+                  className="coast-button-primary rounded-2xl px-5 py-3"
                 >
                   Mark as {house.visited ? 'not visited' : 'visited'}
                 </button>
