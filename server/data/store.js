@@ -72,18 +72,163 @@ export const createDefaultUser=createUser;
 export async function getAllHouses(){ const [r]=await pool.query('SELECT * FROM houses'); return r; }
 export async function filterHouses(){ return getAllHouses(); }
 export async function getHouseById(id){ const [r]=await pool.query('SELECT * FROM houses WHERE id=?',[id]); return r[0]||null; }
-export async function createHouse(h){
- const id=uuid();
- await pool.query('INSERT INTO houses(id,title,link,imagePath,location,type,price,rooms,bathrooms,ibiPrice,communityFee,visited,description,pros,cons,agentName,agentPhone) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
- [id,h.title,h.link,h.imagePath,h.location,h.type,h.price,h.rooms,h.bathrooms,h.ibiPrice||0,h.communityFee||0,!!h.visited,h.description,h.pros,h.cons,h.agentName,h.agentPhone]);
- return {id,...h};
+export async function createHouse(h) {
+  const id = uuid();
+
+  await pool.query(
+    `INSERT INTO houses(
+      id,
+      title,
+      link,
+      imagePath,
+      location,
+      type,
+      price,
+      rooms,
+      bathrooms,
+      ibiPrice,
+      communityFee,
+      visited,
+      description,
+      pros,
+      cons,
+      agentName,
+      agentPhone
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+    [
+      id,
+      h.title,
+      h.link,
+      h.imagePath,
+      h.location,
+      h.type,
+      h.price,
+      h.rooms,
+      h.bathrooms,
+      h.ibiPrice || 0,
+      h.communityFee || 0,
+      0, // default: not visited
+      h.description,
+      h.pros,
+      h.cons,
+      h.agentName,
+      h.agentPhone
+    ]
+  );
+
+  return {
+    id,
+    ...h,
+    visited: false
+  };
+}
+
+export async function updateHouse(id, changes) {
+  const current = await getHouseById(id);
+
+  if (!current) {
+    return null;
+  }
+
+  const h = {
+    ...current,
+    ...Object.fromEntries(
+      Object.entries(changes).filter(
+        ([, v]) => v !== undefined && v !== null && v !== ''
+      )
+    )
+  };
+
+  const visited =
+    h.visited === true ||
+    h.visited === 1 ||
+    h.visited === '1' ||
+    h.visited === 'true';
+
+  await pool.query(
+    `UPDATE houses SET
+      title=?,
+      link=?,
+      imagePath=?,
+      location=?,
+      type=?,
+      price=?,
+      rooms=?,
+      bathrooms=?,
+      ibiPrice=?,
+      communityFee=?,
+      visited=?,
+      description=?,
+      pros=?,
+      cons=?,
+      agentName=?,
+      agentPhone=?
+     WHERE id=?`,
+    [
+      h.title,
+      h.link,
+      h.imagePath,
+      h.location,
+      h.type,
+      h.price,
+      h.rooms,
+      h.bathrooms,
+      h.ibiPrice || 0,
+      h.communityFee || 0,
+      visited ? 1 : 0,
+      h.description,
+      h.pros,
+      h.cons,
+      h.agentName,
+      h.agentPhone,
+      id
+    ]
+  );
+
+  return getHouseById(id);
 }
 export async function updateHouse(id, changes){
- const current = await getHouseById(id);
- if(!current) return null;
- const h = {...current, ...Object.fromEntries(Object.entries(changes).filter(([k,v]) => v !== undefined && v !== null && v !== ''))};
- await pool.query('UPDATE houses SET title=?,link=?,imagePath=?,location=?,type=?,price=?,rooms=?,bathrooms=?,ibiPrice=?,communityFee=?,visited=?,description=?,pros=?,cons=?,agentName=?,agentPhone=? WHERE id=?',
- [h.title,h.link,h.imagePath,h.location,h.type,h.price,h.rooms,h.bathrooms,h.ibiPrice,h.communityFee,h.visited,h.description,h.pros,h.cons,h.agentName,h.agentPhone,id]);
- return getHouseById(id);
+  const current = await getHouseById(id);
+  if(!current) return null;
+
+  const h = {
+    ...current,
+    ...Object.fromEntries(
+      Object.entries(changes).filter(
+        ([k,v]) => v !== undefined && v !== null && v !== ''
+      )
+    )
+  };
+
+  const visited =
+    h.visited === true ||
+    h.visited === 1 ||
+    h.visited === '1' ||
+    h.visited === 'true';
+
+  await pool.query(
+    'UPDATE houses SET title=?,link=?,imagePath=?,location=?,type=?,price=?,rooms=?,bathrooms=?,ibiPrice=?,communityFee=?,visited=?,description=?,pros=?,cons=?,agentName=?,agentPhone=? WHERE id=?',
+    [
+      h.title,
+      h.link,
+      h.imagePath,
+      h.location,
+      h.type,
+      h.price,
+      h.rooms,
+      h.bathrooms,
+      h.ibiPrice,
+      h.communityFee,
+      visited ? 1 : 0,
+      h.description,
+      h.pros,
+      h.cons,
+      h.agentName,
+      h.agentPhone,
+      id
+    ]
+  );
+
+  return getHouseById(id);
 }
 export async function deleteHouse(id){ const old=await getHouseById(id); await pool.query('DELETE FROM houses WHERE id=?',[id]); return old; }
