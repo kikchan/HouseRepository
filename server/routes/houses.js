@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', upload.single('image'), async (req, res) => {
-  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, agentName, agentPhone } = req.body;
+  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, pros, cons, agentName, agentPhone } = req.body;
   if (!title || !location || !type || !price || !rooms || !bathrooms) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -71,6 +71,8 @@ router.post('/', upload.single('image'), async (req, res) => {
     communityFee,
     visited,
     description: description || null,
+    pros: pros || null,
+    cons: cons || null,
     agentName: agentName || null,
     agentPhone: agentPhone || null,
   });
@@ -82,7 +84,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
   const existing = await getHouseById(req.params.id);
   if (!existing) return res.status(404).json({ error: 'House not found' });
 
-  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, agentName, agentPhone } = req.body;
+  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, pros, cons, agentName, agentPhone } = req.body;
   const imagePath = req.file ? `/uploads/houses/${req.file.filename}` : existing.imagePath;
 
   const house = await updateHouse(req.params.id, {
@@ -98,6 +100,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     communityFee,
     visited,
     description,
+    pros,
+    cons,
     agentName,
     agentPhone,
   });

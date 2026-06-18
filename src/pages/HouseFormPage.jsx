@@ -18,6 +18,8 @@ export default function HouseFormPage({ editMode }) {
     communityFee: '',
     visited: false,
     description: '',
+    pros: '',
+    cons: '',
     agentName: '',
     agentPhone: '',
   });
@@ -48,6 +50,8 @@ export default function HouseFormPage({ editMode }) {
         communityFee: house.communityFee || '',
         visited: house.visited || false,
         description: house.description || '',
+        pros: house.pros || '',
+        cons: house.cons || '',
         agentName: house.agentName || '',
         agentPhone: house.agentPhone || '',
       });
@@ -239,6 +243,27 @@ export default function HouseFormPage({ editMode }) {
               className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3"
             />
           </label>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">Pros</span>
+              <textarea
+                value={formValues.pros}
+                onChange={(e) => handleChange('pros', e.target.value)}
+                rows="4"
+                className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">Cons</span>
+              <textarea
+                value={formValues.cons}
+                onChange={(e) => handleChange('cons', e.target.value)}
+                rows="4"
+                className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3"
+              />
+            </label>
+          </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">

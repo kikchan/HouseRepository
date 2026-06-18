@@ -82,6 +82,10 @@ export default function HouseDetailPage() {
                 {house.visited ? 'Visited' : 'Not visited'}
               </span>
             </div>
+            <div className="mb-4 grid gap-3 sm:grid-cols-2 text-sm text-slate-500">
+              <div>Added: {house.createdAt ? new Date(house.createdAt).toLocaleString() : 'Unknown'}</div>
+              <div>Modified: {house.updatedAt ? new Date(house.updatedAt).toLocaleString() : 'Unknown'}</div>
+            </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
@@ -108,6 +112,14 @@ export default function HouseDetailPage() {
               <div>
                 <h2 className="text-lg font-semibold">Description</h2>
                 <p className="mt-2 text-slate-600">{house.description || 'No description available.'}</p>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">Pros</h2>
+                <p className="mt-2 text-slate-600">{house.pros || 'No pros listed.'}</p>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold">Cons</h2>
+                <p className="mt-2 text-slate-600">{house.cons || 'No cons listed.'}</p>
               </div>
               {(house.agentName || house.agentPhone) && (
                 <div>

@@ -41,6 +41,9 @@ export default function HouseCard({ house, onDelete }) {
           <span>{house.bathrooms} baths</span>
           <span>IBI €{house.ibiPrice}</span>
         </div>
+        <div className="mb-4 text-xs text-slate-500">
+          Added: {house.createdAt ? new Date(house.createdAt).toLocaleDateString() : 'Unknown'} · Modified: {house.updatedAt ? new Date(house.updatedAt).toLocaleDateString() : 'Unknown'}
+        </div>
         <div className="flex flex-wrap gap-3">
           <Link
             to={`/houses/${house.id}`}
