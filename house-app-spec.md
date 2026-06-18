@@ -1,22 +1,23 @@
 # House Management Web App – Copilot Specification
 
 ## 🎯 Goal
-Build a simple full-stack web application to manage house listings for personal use. The app must be responsive (desktop + mobile) and allow multiple users with the same permissions to perform full CRUD operations on houses.
+Build a simple full-stack web application to manage house listings for personal use. The app must be responsive (desktop + mobile) and allow authorized users to perform full CRUD operations on houses.
 
 ---
 
 ## 🧱 Tech Stack
-- Frontend: React (Vite) + TailwindCSS (or Bootstrap)
+- Frontend: React (Vite) + TailwindCSS
 - Backend: Node.js + Express
-- Database: MySQL (Prisma preferred)
-- Auth: Session-based login (all users equal permissions)
+- Database: MySQL
+- Auth: Session-based login with first-run admin setup
 - File uploads: Multer (local storage `/uploads/houses/`)
 
 ---
 
 ## 🔐 Authentication
 - Username + password login
-- All users share same permissions
+- First-run setup page creates the initial admin user when no users exist
+- Admins can create additional users
 - bcrypt password hashing
 - Protect all CRUD routes
 
@@ -25,12 +26,12 @@ Build a simple full-stack web application to manage house listings for personal 
 ## 🏠 House Entity
 
 Fields:
-- id (UUID or auto-increment)
+- id (auto-increment integer)
 - title
 - link (external URL)
 - imagePath (local file path)
 - location
-- type (apartment, house, villa, etc.)
+- type (apartment, house, villa, studio, etc.)
 - price
 - rooms
 - bathrooms
@@ -38,8 +39,14 @@ Fields:
 - communityFee (monthly)
 - visited (boolean)
 - description
+- pros
+- cons
 - createdAt
 - updatedAt
+
+Notes:
+- No migration path is required for an empty database.
+- Schema can be created automatically by the backend on startup.
 
 ---
 
@@ -56,6 +63,11 @@ Fields:
 ### Login
 - Username + password
 - Redirect to dashboard
+- If no users exist, redirect to setup page
+
+### Setup
+- Create the first admin user
+- Only shown when the database has zero users
 
 ### Dashboard
 - Grid of house cards
@@ -63,6 +75,7 @@ Fields:
 - Visited badge
 - Actions: view / edit / delete
 - Filters: visited, type, price
+- Admin user management panel for creating new users
 
 ### Detail Page
 - Full house info
@@ -70,10 +83,13 @@ Fields:
 - External link
 - Edit / delete
 - Toggle visited
+- Display date added and date modified
+- Display pros and cons sections
 
 ### Create/Edit Form
 - Shared form
 - Image upload
+- Pros and cons fields
 - Validation required
 
 ---
@@ -81,9 +97,13 @@ Fields:
 ## 🔧 API Endpoints
 
 ### Auth
+- POST /auth/setup
 - POST /auth/login
 - POST /auth/logout
 - GET /auth/me
+- GET /auth/first-run
+- GET /auth/users
+- POST /auth/users
 
 ### Houses
 - GET /houses
@@ -94,11 +114,11 @@ Fields:
 
 ---
 
-## 🗄 Prisma Schema
+## 🗄 Data Model
 
 ```prisma
 model House {
-  id            String   @id @default(uuid())
+  id            Int      @id @default(autoincrement())
   title         String
   link          String?
   imagePath     String?
@@ -111,8 +131,18 @@ model House {
   communityFee  Float
   visited       Boolean  @default(false)
   description   String?
+  pros          String?
+  cons          String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  password String
+  isAdmin  Boolean @default(false)
+  createdAt DateTime @default(now())
 }
 ```
 
@@ -123,12 +153,12 @@ model House {
 - Mobile-first design
 - Clean card-based layout
 - Fast interactions
-- Optional dark mode
+- Clear admin and user workflows
 
 ---
 
 ## 🔒 Security
-- Protect all routes except login
+- Protect all routes except login/setup
 - Validate inputs server-side
 - Restrict file uploads to images only
 - Limit file size (5MB)

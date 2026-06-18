@@ -1,15 +1,17 @@
 # House Inventory
 
-A simple full-stack house management web app built with React, Vite, TailwindCSS, and Express with file-based storage.
+A simple full-stack house management web app built with React, Vite, TailwindCSS, and Express using MySQL persistence.
 
 ## Features
 
 - Session-based authentication
+- First-run admin setup
+- User management for admins
 - CRUD for house listings
 - Image upload support
 - Filtering, search, and sorting
+- Display created/modified timestamps and pros/cons
 - Responsive design for desktop and mobile
-- MySQL-backed persistence with optional local or external database
 
 ## Setup
 
@@ -23,22 +25,33 @@ A simple full-stack house management web app built with React, Vite, TailwindCSS
    copy .env.example .env
    ```
 
-3. Configure the MySQL connection in `.env` to match your existing database.
+3. Configure the MySQL connection in `.env` so it points to your existing database.
 
-4. Start the app:
+4. Start the backend server:
    ```bash
    npm run dev:server
    ```
 
-5. Open the frontend at `http://localhost:5173`
+5. Start the frontend in another shell:
+   ```bash
+   npm run dev:client
+   ```
 
-## Login
+6. Open the frontend at `http://localhost:5173`
 
-During first-run, visit the setup page to create the initial admin user.
+## Admin Setup
 
-If you run the app outside Docker, make sure MySQL is running and the connection settings in `.env` are correct.
+If the database contains zero users, the app will automatically route to the setup page. Create the first admin user there.
 
-To use Docker Compose with your own database host, set `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, and `MYSQL_DATABASE` in `.env` and remove any local MySQL service configuration.
+## Docker
+
+If you want to use Docker, set your database credentials in `.env` and then run:
+
+```bash
+docker compose up --build
+```
+
+The app will use the `MYSQL_*` values from `.env`.
 
 ## Scripts
 
@@ -54,7 +67,8 @@ Data is stored in MySQL. Uploaded images are stored in `uploads/houses/`.
 
 ## Notes
 
-- The app uses MySQL for persistent storage.
-- Use `.env` to point to your existing database.
-- The first user must be created via the setup page when the database is empty.
+- The app is configured for MySQL persistence.
+- You can connect to your existing MySQL instance via `.env`.
+- No migration is required for an empty database.
+- The first admin user is created through the setup page.
 
