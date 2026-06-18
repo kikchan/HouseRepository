@@ -2,6 +2,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || '';
 
 export async function fetchJson(url, options = {}) {
   const response = await fetch(`${API_BASE}${url}`, {
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -16,6 +17,43 @@ export async function fetchJson(url, options = {}) {
   return response.json();
 }
 
+export async function login(username, password) {
+  return fetchJson('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ username, password }),
+  });
+}
+
+export async function setupAdmin(username, password) {
+  return fetchJson('/auth/setup', {
+    method: 'POST',
+    body: JSON.stringify({ username, password }),
+  });
+}
+
+export async function logout() {
+  return fetchJson('/auth/logout', { method: 'POST' });
+}
+
+export async function me() {
+  return fetchJson('/auth/me');
+}
+
+export async function firstRun() {
+  return fetchJson('/auth/first-run');
+}
+
+export async function getUsers() {
+  return fetchJson('/auth/users');
+}
+
+export async function createUser(username, password, isAdmin = false) {
+  return fetchJson('/auth/users', {
+    method: 'POST',
+    body: JSON.stringify({ username, password, isAdmin }),
+  });
+}
+
 export async function getHouses(query = '') {
   return fetchJson(`/houses${query}`);
 }
@@ -27,6 +65,7 @@ export async function getHouse(id) {
 export async function createHouse(formData) {
   const response = await fetch(`${API_BASE}/houses`, {
     method: 'POST',
+    credentials: 'include',
     body: formData,
   });
   if (!response.ok) {
@@ -39,6 +78,7 @@ export async function createHouse(formData) {
 export async function updateHouse(id, formData) {
   const response = await fetch(`${API_BASE}/houses/${id}`, {
     method: 'PUT',
+    credentials: 'include',
     body: formData,
   });
   if (!response.ok) {

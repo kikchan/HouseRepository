@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { requireAuth } from '../middleware/auth.js';
 import { getAllHouses, getHouseById, createHouse, updateHouse, deleteHouse, filterHouses } from '../data/store.js';
 
 const router = express.Router();
@@ -35,27 +36,29 @@ function mapHouse(house) {
   };
 }
 
+router.use(requireAuth);
+
 router.get('/', async (req, res) => {
   const { visited, type, minPrice, maxPrice, search } = req.query;
   const filters = { visited, type, minPrice, maxPrice, search };
-  const houses = filterHouses(filters);
+  const houses = await filterHouses(filters);
   res.json(houses.map(mapHouse));
 });
 
 router.get('/:id', async (req, res) => {
-  const house = getHouseById(req.params.id);
+  const house = await getHouseById(req.params.id);
   if (!house) return res.status(404).json({ error: 'House not found' });
   res.json(mapHouse(house));
 });
 
 router.post('/', upload.single('image'), async (req, res) => {
-  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description } = req.body;
+  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, agentName, agentPhone } = req.body;
   if (!title || !location || !type || !price || !rooms || !bathrooms) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   const imagePath = req.file ? `/uploads/houses/${req.file.filename}` : null;
-  const house = createHouse({
+  const house = await createHouse({
     title,
     link: link || null,
     imagePath,
@@ -68,19 +71,21 @@ router.post('/', upload.single('image'), async (req, res) => {
     communityFee,
     visited,
     description: description || null,
+    agentName: agentName || null,
+    agentPhone: agentPhone || null,
   });
 
   res.status(201).json(mapHouse(house));
 });
 
 router.put('/:id', upload.single('image'), async (req, res) => {
-  const existing = getHouseById(req.params.id);
+  const existing = await getHouseById(req.params.id);
   if (!existing) return res.status(404).json({ error: 'House not found' });
 
-  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description } = req.body;
+  const { title, link, location, type, price, rooms, bathrooms, ibiPrice, communityFee, visited, description, agentName, agentPhone } = req.body;
   const imagePath = req.file ? `/uploads/houses/${req.file.filename}` : existing.imagePath;
 
-  const house = updateHouse(req.params.id, {
+  const house = await updateHouse(req.params.id, {
     title,
     link,
     imagePath,
@@ -93,13 +98,15 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     communityFee,
     visited,
     description,
+    agentName,
+    agentPhone,
   });
 
   res.json(mapHouse(house));
 });
 
 router.delete('/:id', async (req, res) => {
-  const house = deleteHouse(req.params.id);
+  const house = await deleteHouse(req.params.id);
   if (!house) return res.status(404).json({ error: 'House not found' });
   res.json({ ok: true, house });
 });

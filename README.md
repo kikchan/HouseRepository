@@ -18,26 +18,23 @@ A simple full-stack house management web app built with React, Vite, TailwindCSS
    npm install
    ```
 
-2. Configure your settings in `.env` (optional):
-   ```env
-   SESSION_SECRET="super-secret-change-me"
-   DEFAULT_USER="admin"
-   DEFAULT_PASSWORD="password123"
+2. Create a `.env` file from the example if needed:
+   ```bash
+   copy .env.example .env
    ```
 
-3. Start the app:
+3. Start the app and database with Docker Compose:
    ```bash
-   npm run dev
+   docker compose up --build
    ```
 
 4. Open the frontend at `http://localhost:5173`
 
 ## Login
 
-Default user credentials:
+During first-run, visit the setup page to create the initial admin user.
 
-- Username: `admin`
-- Password: `password123`
+If you run the app outside Docker, make sure MySQL is running locally on `localhost:3306` with credentials matching `.env`.
 
 ## Scripts
 

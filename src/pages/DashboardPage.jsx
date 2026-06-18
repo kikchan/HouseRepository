@@ -1,14 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteHouse, getHouses } from '../api.js';
+import { createUser, deleteHouse, getHouses, getUsers } from '../api.js';
 import HouseCard from '../components/HouseCard.jsx';
 
 const TYPE_OPTIONS = ['apartment', 'house', 'villa'];
 
-export default function DashboardPage() {
+export default function DashboardPage({ user, onLogout }) {
   const [houses, setHouses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [userError, setUserError] = useState('');
+  const [users, setUsers] = useState([]);
+  const [newUsername, setNewUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newIsAdmin, setNewIsAdmin] = useState(false);
   const [visitedFilter, setVisitedFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [search, setSearch] = useState('');
@@ -17,7 +22,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadHouses();
-  }, []);
+  }, [visitedFilter, typeFilter, search]);
+
+  useEffect(() => {
+    if (user?.isAdmin) {
+      loadUsers();
+    }
+  }, [user]);
 
   const loadHouses = async () => {
     setLoading(true);
@@ -32,6 +43,33 @@ export default function DashboardPage() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadUsers = async () => {
+    try {
+      const result = await getUsers();
+      setUsers(result);
+    } catch (err) {
+      setUserError(err.message);
+    }
+  };
+
+  const handleCreateUser = async () => {
+    setUserError('');
+    if (!newUsername || !newPassword) {
+      setUserError('Please enter username and password');
+      return;
+    }
+
+    try {
+      await createUser(newUsername, newPassword, newIsAdmin);
+      setNewUsername('');
+      setNewPassword('');
+      setNewIsAdmin(false);
+      loadUsers();
+    } catch (err) {
+      setUserError(err.message);
     }
   };
 
@@ -121,6 +159,78 @@ export default function DashboardPage() {
             </div>
           </div>
         </section>
+
+        {user?.isAdmin && (
+          <section className="mb-6 rounded-3xl bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold">Admin users</h2>
+                <p className="text-sm text-slate-500">Create users and manage access for your team.</p>
+              </div>
+              <div>
+                <Link
+                  to="/houses/new"
+                  className="rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+                >
+                  Add house
+                </Link>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Username</label>
+                <input
+                  value={newUsername}
+                  onChange={(e) => setNewUsername(e.target.value)}
+                  className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3"
+                  placeholder="new user"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Password</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="mt-2 w-full rounded-xl border-gray-300 px-4 py-3"
+                  placeholder="secret"
+                />
+              </div>
+              <div className="flex items-end gap-3">
+                <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={newIsAdmin}
+                    onChange={(e) => setNewIsAdmin(e.target.checked)}
+                    className="h-4 w-4 rounded border-slate-300 text-slate-900"
+                  />
+                  Admin
+                </label>
+                <button
+                  type="button"
+                  onClick={handleCreateUser}
+                  className="rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-700"
+                >
+                  Create user
+                </button>
+              </div>
+            </div>
+            {userError && <p className="mt-3 text-sm text-rose-600">{userError}</p>}
+            {users.length > 0 && (
+              <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <h3 className="text-sm font-semibold text-slate-700">Current users</h3>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {users.map((u) => (
+                    <div key={u.id} className="rounded-2xl bg-white p-3 shadow-sm">
+                      <p className="font-semibold">{u.username}</p>
+                      <p className="text-sm text-slate-500">{u.isAdmin ? 'Admin' : 'Standard user'}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>

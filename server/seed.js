@@ -9,7 +9,7 @@ async function main() {
 
   await createDefaultUser(defaultUsername, defaultPassword);
 
-  const existingHouses = getAllHouses();
+  const existingHouses = await getAllHouses();
   if (existingHouses.length > 0) {
     console.log('Houses already exist. Skipping seed.');
     return;
