@@ -72,8 +72,8 @@ export default function HouseCard({ house, onDelete }) {
           <span>{house.bathrooms} baths</span>
         </div>
         <div className="mb-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
-          <span>IBI {house.ibiPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
-          <span>Community fee {house.communityFee.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })} / month</span>
+          <span>IBI: {house.ibiPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
+          <span>Community fee: {house.communityFee.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })} / month</span>
         </div>
         <div className="mb-4 text-xs text-slate-500">
           Visited: {house.visitedDate ? new Date(house.visitedDate).toLocaleString('es-ES', { hour12: false }) : 'Not visited'}
