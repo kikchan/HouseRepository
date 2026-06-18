@@ -17,7 +17,8 @@ const port = process.env.PORT || 4000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+const frontEndOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+app.use(cors({ origin: frontEndOrigin, credentials: true }));
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'dev-secret',
@@ -30,6 +31,14 @@ app.use(
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.use('/auth', authRouter);
 app.use('/houses', housesRouter);
+
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '..', 'dist');
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 app.get('/', (req, res) => {
   res.send({ status: 'House Inventory API' });

@@ -5,5 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    proxy: {
+      '/auth': 'http://localhost:4000',
+      '/houses': 'http://localhost:4000',
+      '/uploads': 'http://localhost:4000',
+    },
   },
 });
