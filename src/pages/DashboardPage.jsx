@@ -4,7 +4,7 @@ import { deleteHouse, getHouses } from '../api.js';
 import AppHeader from '../components/AppHeader.jsx';
 import HouseCard from '../components/HouseCard.jsx';
 
-const TYPE_OPTIONS = ['apartment', 'house', 'villa'];
+const TYPE_OPTIONS = ['apartment', 'house'];
 
 export default function DashboardPage({ user, onLogout }) {
   const [houses, setHouses] = useState([]);

@@ -1,7 +1,7 @@
-
 import '../config/env.js';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
@@ -48,6 +48,7 @@ async function init() {
     )
   `);
 }
+
 await init();
 
 const uuid = () => crypto.randomUUID();
@@ -56,30 +57,109 @@ export async function countUsers() {
   const [r] = await pool.query('SELECT COUNT(*) c FROM users');
   return r[0].c;
 }
+
 export async function findUserByUsername(username) {
-  const [r] = await pool.query('SELECT * FROM users WHERE username=?',[username]);
+  const [r] = await pool.query(
+    'SELECT * FROM users WHERE username=?',
+    [username]
+  );
   return r[0] || null;
 }
+
 export async function getAllUsers() {
   const [r] = await pool.query('SELECT * FROM users');
   return r;
 }
-export async function createUser(username,password,isAdmin=false) {
+
+export async function createUser(username, password, isAdmin = false) {
   const existing = await findUserByUsername(username);
-  if(existing) throw new Error('User already exists');
-  const hash = await bcrypt.hash(password,10);
-  const id = uuid();
-  await pool.query('INSERT INTO users(id,username,password,isAdmin) VALUES (?,?,?,?)',[id,username,hash,isAdmin]);
-  return {id,username,password:hash,isAdmin};
-}
-export async function getAllHouses(){ const [r]=await pool.query('SELECT * FROM houses'); return r; }
-export async function filterHouses(){ return getAllHouses(); }
-export async function getHouseById(id){ const [r]=await pool.query('SELECT * FROM houses WHERE id=?',[id]); return r[0]||null; }
-export async function createHouse(h) {
+
+  if (existing) {
+    throw new Error('User already exists');
+  }
+
+  const hash = await bcrypt.hash(password, 10);
   const id = uuid();
 
   await pool.query(
-    `INSERT INTO houses(
+    'INSERT INTO users(id,username,password,isAdmin) VALUES (?,?,?,?)',
+    [id, username, hash, isAdmin]
+  );
+
+  return {
+    id,
+    username,
+    password: hash,
+    isAdmin
+  };
+}
+
+export async function getAllHouses() {
+  const [r] = await pool.query(
+    'SELECT * FROM houses ORDER BY modified DESC'
+  );
+  return r;
+}
+
+export async function filterHouses(filters = {}) {
+  let sql = 'SELECT * FROM houses WHERE 1=1';
+  const params = [];
+
+  if (filters.visited === 'true') {
+    sql += ' AND visited = ?';
+    params.push(1);
+  } else if (filters.visited === 'false') {
+    sql += ' AND visited = ?';
+    params.push(0);
+  }
+
+  if (filters.type && filters.type !== 'all') {
+    sql += ' AND type = ?';
+    params.push(filters.type);
+  }
+
+  if (filters.search?.trim()) {
+    sql += ' AND (title LIKE ? OR location LIKE ?)';
+    const search = `%${filters.search.trim()}%`;
+    params.push(search, search);
+  }
+
+  if (filters.minPrice) {
+    sql += ' AND price >= ?';
+    params.push(Number(filters.minPrice));
+  }
+
+  if (filters.maxPrice) {
+    sql += ' AND price <= ?';
+    params.push(Number(filters.maxPrice));
+  }
+
+  sql += ' ORDER BY modified DESC';
+
+  const [rows] = await pool.query(sql, params);
+  return rows;
+}
+
+export async function getHouseById(id) {
+  const [r] = await pool.query(
+    'SELECT * FROM houses WHERE id=?',
+    [id]
+  );
+
+  return r[0] || null;
+}
+
+export async function createHouse(h) {
+  const id = uuid();
+
+  const visited =
+    h.visited === true ||
+    h.visited === 1 ||
+    h.visited === '1' ||
+    h.visited === 'true';
+
+  await pool.query(
+    `INSERT INTO houses (
       id,
       title,
       link,
@@ -96,13 +176,15 @@ export async function createHouse(h) {
       pros,
       cons,
       agentName,
-      agentPhone
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      agentPhone,
+      size,
+      visitedDate
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     [
       id,
       h.title,
-      h.link,
-      h.imagePath,
+      h.link || null,
+      h.imagePath || null,
       h.location,
       h.type,
       h.price,
@@ -110,22 +192,18 @@ export async function createHouse(h) {
       h.bathrooms,
       h.ibiPrice || 0,
       h.communityFee || 0,
-      0, // default: not visited
-      h.description,
-      h.pros,
-      h.cons,
-      h.agentName,
-      h.agentPhone,
+      visited ? 1 : 0,
+      h.description || null,
+      h.pros || null,
+      h.cons || null,
+      h.agentName || null,
+      h.agentPhone || null,
       h.size || 0,
       h.visitedDate || null
     ]
   );
 
-  return {
-    id,
-    ...h,
-    visited: false, size:h.size||0, added:new Date(), modified:new Date(), visitedDate:h.visitedDate||null
-  };
+  return getHouseById(id);
 }
 
 export async function updateHouse(id, changes) {
@@ -139,7 +217,10 @@ export async function updateHouse(id, changes) {
     ...current,
     ...Object.fromEntries(
       Object.entries(changes).filter(
-        ([, v]) => v !== undefined && v !== null && v !== ''
+        ([, value]) =>
+          value !== undefined &&
+          value !== null &&
+          value !== ''
       )
     )
   };
@@ -197,4 +278,14 @@ export async function updateHouse(id, changes) {
 
   return getHouseById(id);
 }
-export async function deleteHouse(id){ const old=await getHouseById(id); await pool.query('DELETE FROM houses WHERE id=?',[id]); return old; }
+
+export async function deleteHouse(id) {
+  const old = await getHouseById(id);
+
+  await pool.query(
+    'DELETE FROM houses WHERE id=?',
+    [id]
+  );
+
+  return old;
+}
