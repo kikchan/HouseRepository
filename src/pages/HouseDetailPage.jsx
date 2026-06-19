@@ -117,23 +117,81 @@ export default function HouseDetailPage({ onLogout }) {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <p className="text-sm text-slate-500">Price</p>
-                <p className="mt-1 text-xl font-semibold">{house.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500">Community fee</p>
-                <p className="mt-1 text-lg">{house.communityFee.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })} / month</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500">IBI price</p>
-                <p className="mt-1 text-lg">{house.ibiPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500">Link</p>
-                <a href={house.link || '#'} target="_blank" rel="noreferrer" className="mt-1 block text-slate-900 underline">
-                  {house.link ? 'Open listing' : 'No link provided'}
-                </a>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div>
+                  <p className="text-sm text-slate-500">Price</p>
+                  <p className="mt-1 text-xl font-semibold">
+                    {house.price?.toLocaleString('es-ES', {
+                      style: 'currency',
+                      currency: 'EUR'
+                    })}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-500">Size</p>
+                  <p className="mt-1 text-lg">
+                    {house.size ? `${house.size} m²` : 'N/A'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-500">Type</p>
+                  <p className="mt-1 text-lg capitalize">
+                    {house.type || 'N/A'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-500">Rooms</p>
+                  <p className="mt-1 text-lg">
+                    {house.rooms ?? 'N/A'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-500">Bathrooms</p>
+                  <p className="mt-1 text-lg">
+                    {house.bathrooms ?? 'N/A'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-500">Community fee</p>
+                  <p className="mt-1 text-lg">
+                    {(house.communityFee ?? 0).toLocaleString('es-ES', {
+                      style: 'currency',
+                      currency: 'EUR'
+                    })} / month
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-500">IBI</p>
+                  <p className="mt-1 text-lg">
+                    {(house.ibiPrice ?? 0).toLocaleString('es-ES', {
+                      style: 'currency',
+                      currency: 'EUR'
+                    })}
+                  </p>
+                </div>
+
+                <div className="sm:col-span-2 lg:col-span-3">
+                  <p className="text-sm text-slate-500">Listing URL</p>
+
+                  {house.link ? (
+                    <a
+                      href={house.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 block break-all text-slate-900 underline"
+                    >
+                      {house.link}
+                    </a>
+                  ) : (
+                    <p className="mt-1 text-lg">No link provided</p>
+                  )}
+                </div>
               </div>
             </div>
 
