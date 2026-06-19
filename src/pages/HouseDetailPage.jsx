@@ -111,9 +111,9 @@ export default function HouseDetailPage({ onLogout }) {
               </span>
             </div>
             <div className="mb-4 grid gap-3 sm:grid-cols-1 text-sm text-slate-500">
-              <div>Added: {new Date(house.added||house.added).toLocaleString("es-ES", { hour12: false })}</div>
-              <div>Modified: {new Date(house.modified||house.updatedAt).toLocaleString("es-ES", { hour12: false })}</div>
-              <div>Visited Date: {house.visitedDate? new Date(house.visitedDate).toLocaleString("es-ES", { hour12: false }):'N/A'}</div>
+              <div>Added: {new Date(house.added||house.added).toLocaleString("es-ES", { timeZone: "UTC", hour12: false })}</div>
+              <div>Modified: {new Date(house.modified||house.updatedAt).toLocaleString("es-ES", { timeZone: "UTC", hour12: false })}</div>
+              <div>Visited Date: {house.visitedDate? new Date(house.visitedDate).toLocaleString("es-ES", { timeZone: "UTC", hour12: false }):'N/A'}</div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

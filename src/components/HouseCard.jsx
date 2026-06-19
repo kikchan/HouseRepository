@@ -73,13 +73,13 @@ export default function HouseCard({ house, onDelete }) {
         </div>
         <div className="mb-4 grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
           <span>IBI: {house.ibiPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
-          <span>Community fee: {house.communityFee.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })} / month</span>
+          <span>Community: {house.communityFee.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}/m</span>
         </div>
         <div className="mb-4 text-xs text-teal-700">
-          Visited: {house.visitedDate ? new Date(house.visitedDate).toLocaleString('es-ES', { hour12: false }) : 'Not visited'}
+          Visited: {house.visitedDate ? new Date(house.visitedDate).toLocaleString('es-ES', { timeZone: "UTC", hour12: false }) : 'Not visited'}
         </div>
         <div className="mb-4 text-xs text-teal-700">
-          Modified: {new Date(house.modified || house.updatedAt).toLocaleString('es-ES', { hour12: false })}
+          Modified: {new Date(house.modified || house.updatedAt).toLocaleString('es-ES', { timeZone: "UTC", hour12: false })}
         </div>
         <div className="flex flex-wrap gap-3" onClick={stopCardClick} onKeyDown={stopCardKeyDown}>
           <Link
