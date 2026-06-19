@@ -117,7 +117,7 @@ export default function DashboardPage({ user, onLogout }) {
                   onClick={() => navigate('/houses/new')}
                   className={`${buttonClass} coast-button-primary`}
                 >
-                  Add house bre23
+                  Add house
                 </button>
               </div>
             </div>
