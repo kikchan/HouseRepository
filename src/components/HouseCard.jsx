@@ -76,7 +76,7 @@ export default function HouseCard({ house, onDelete }) {
           <span>Community: {house.communityFee.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}/m</span>
         </div>
         <div className="mb-4 text-xs text-teal-700">
-          Visited: {house.visitedDate ? new Date(house.visitedDate).toLocaleString('es-ES', { timeZone: "UTC", hour12: false }) : 'Not visited'}
+          {house.visited ? 'Visited' : 'Visit'}: {house.visitedDate ? new Date(house.visitedDate).toLocaleString('es-ES', { timeZone: "UTC", hour12: false }) : 'Not requested'}
         </div>
         <div className="mb-4 text-xs text-teal-700">
           Modified: {new Date(house.modified || house.updatedAt).toLocaleString('es-ES', { timeZone: "UTC", hour12: false })}
