@@ -6,6 +6,7 @@ import HouseCard from '../components/HouseCard.jsx';
 
 const TYPE_OPTIONS = ['apartment', 'house'];
 
+
 export default function DashboardPage({ user, onLogout }) {
   const [houses, setHouses] = useState([]);
   const [loading, setLoading] = useState(true);
